@@ -5,6 +5,13 @@ const pizzaController = {
    //  each will take two parameters: req and res.
    getAllPizza(req, res) {
       Pizza.find({})
+          // To populate a field, just chain the .populate() method 
+         .populate({ 
+            path: 'comments', // passing in an object with the key path 
+            select: '-__v' // minus sign (don't return) - tell Mongoose that we don't care about the __v field on comments either
+         })
+         .select('-__v') // minus sign - tell Mongoose that we don't care about the __v field on the pizza 
+         .sort({ _id: -1 }) // sort in DESC order by the _id value
          .then(dbPizzaData => res.json(dbPizzaData))
          .catch(err => {
             console.log(err);
@@ -15,6 +22,11 @@ const pizzaController = {
    // get one pizza by id
    getPizzaById({ params }, res) {
       Pizza.findOne({ _id: params.id })
+      .populate({
+         path: 'comments',
+         select: '-__v'
+      })
+      .select('-__v')
       .then(dbPizzaData => {
          // If no pizza is found, send 404
          if (!dbPizzaData) {

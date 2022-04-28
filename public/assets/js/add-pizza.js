@@ -36,7 +36,42 @@ const handleAddTopping = event => {
   toppingValue.value = '';
 };
 
-async function handlePizzaSubmit (event) {
+// // async function handlePizzaSubmit (event) {
+// //   event.preventDefault();
+// //   const pizzaName = $pizzaForm.querySelector('#pizza-name').value;
+// //   const createdBy = $pizzaForm.querySelector('#created-by').value;
+// //   const size = $pizzaForm.querySelector('#pizza-size').value;
+// //   const toppings = [...$pizzaForm.querySelectorAll('[name=topping]:checked')].map(topping => {
+// //     return topping.value;
+// //   });
+// // 
+// //   if (!pizzaName || !createdBy || !toppings.length) {
+// //     return;
+// //   }
+// //   const formData = { pizzaName, createdBy, size, toppings };
+
+// //   const response = await fetch("/api/pizzas", {
+// //     method: "POST",
+// //     headers: {  Accept: 'application/json', "Content-Type": "application/json" },
+// //     body: JSON.stringify(formData),
+// //   });
+// // 
+// //   if (response.ok) {
+// //     //document.location.replace('/');
+// //     response.json().then((data) => {
+// //       alert('Pizza created successfully!');
+// //       console.log(data); // This will print the json object
+// //     });
+// //   } else {
+// //     console.log("---- I am the Else Part -----------------")
+// //     console.log(response);
+// //     response.json().then((data) => {
+// //       alert(data.message);
+// //     });
+// //   }
+// // }; // End of handlePizzaSubmit
+
+const handlePizzaSubmit = event => {
   event.preventDefault();
   const pizzaName = $pizzaForm.querySelector('#pizza-name').value;
   const createdBy = $pizzaForm.querySelector('#created-by').value;
@@ -50,60 +85,25 @@ async function handlePizzaSubmit (event) {
   }
   const formData = { pizzaName, createdBy, size, toppings };
 
-  const response = await fetch("/api/pizzas", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-  });
-
-  if (response.ok) {
-    //document.location.replace('/');
-    response.json().then((data) => {
+  // original fetch version
+  fetch('/api/pizzas', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+  })
+    .then(response => response.json())
+    .then(postResponse => {
       alert('Pizza created successfully!');
-      console.log(data); // This will print the json object
+      console.log(postResponse); // This will print the json object
+    })
+    .catch(err => {
+      console.log(err);
     });
-  } else {
-    console.log("---- I am the Else Part -----------------")
-    console.log(response);
-    response.json().then((data) => {
-      alert(data.message);
-    });
-  }
-}; // End of handlePizzaSubmit
 
-// const handlePizzaSubmit = event => {
-//   event.preventDefault();
-//   const pizzaName = $pizzaForm.querySelector('#pizza-name').value;
-//   const createdBy = $pizzaForm.querySelector('#created-by').value;
-//   const size = $pizzaForm.querySelector('#pizza-size').value;
-//   const toppings = [...$pizzaForm.querySelectorAll('[name=topping]:checked')].map(topping => {
-//     return topping.value;
-//   });
-// 
-//   if (!pizzaName || !createdBy || !toppings.length) {
-//     return;
-//   }
-//   const formData = { pizzaName, createdBy, size, toppings };
-// 
-//   // original fetch version
-//   fetch('/api/pizzas', {
-//     method: 'POST',
-//     headers: {
-//       Accept: 'application/json',
-//       'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify(formData)
-//   })
-//     .then(response => response.json())
-//     .then(postResponse => {
-//       alert('Pizza created successfully!');
-//       console.log(postResponse); // This will print the json object
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// 
-// }; // End of handlePizzaSubmit
+}; // End of handlePizzaSubmit
 
 $pizzaForm.addEventListener('submit', handlePizzaSubmit);
 $addToppingBtn.addEventListener('click', handleAddTopping);
