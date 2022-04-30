@@ -48,8 +48,9 @@ const handleAddTopping = event => {
 // //   if (!pizzaName || !createdBy || !toppings.length) {
 // //     return;
 // //   }
+// //   
 // //   const formData = { pizzaName, createdBy, size, toppings };
-
+// // 
 // //   const response = await fetch("/api/pizzas", {
 // //     method: "POST",
 // //     headers: {  Accept: 'application/json', "Content-Type": "application/json" },
@@ -60,7 +61,7 @@ const handleAddTopping = event => {
 // //     //document.location.replace('/');
 // //     response.json().then((data) => {
 // //       alert('Pizza created successfully!');
-// //       console.log(data); // This will print the json object
+// //       console.log(data); // This will print the json object // or you could return data; here
 // //     });
 // //   } else {
 // //     console.log("---- I am the Else Part -----------------")

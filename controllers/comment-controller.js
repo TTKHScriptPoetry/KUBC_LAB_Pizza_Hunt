@@ -3,21 +3,18 @@ const {Comment, Pizza} = require('../models');
 const commentController = { 
    // action 1
    addComment({ params, body }, res) {
-      console.log(body);
       Comment.create(body) // action
       .then(
-            ({ _id }) => {
-            //console.log(_id)
+            ({ _id }) => {            
             return Pizza.findOneAndUpdate(
                { _id: params.pizzaId},
-               // MongoDB built-in functions like $push start with a dollar sign ($) add { comments: _id} to the specific pizza 
-               { $push: { comments: _id}}, //The $push method works just the same way that it works in JavaScript—it adds data to an array.
+               { $push: { comments: _id}}, //MongoDB built-in functions $push method works just the same way that it works in JavaScript—it adds data to an array.
                { new: true} // expect to receive back the updated pizza (the pizza with the new comment included).
             );
       }) // end of 1st then
       .then (dbPizzaData => {
             if(!dbPizzaData){
-               res.status(404).json({message: "No pizza found with this id!  Message brought by comment-controller"});
+               res.status(404).json({message: "No pizza found with this id!  Brought by comment-controller"});
                return;
             }
             res.json(dbPizzaData);
@@ -34,7 +31,7 @@ const commentController = {
          }
          return Pizza.findByIdAndUpdate(
            {_id: params.pizzaId},
-           { $pull: { comments: params.commentId}},
+           { $pull: { comments: params.commentId}}, // use built-in method pull to pop the comment of matching Id out?
            { new: true} 
          );
       })
@@ -46,8 +43,61 @@ const commentController = {
          res.json(dbPizzaData);
       })
       .catch(err => res.json(err));
-   } // end of removeComment
+   }, // end of removeComment
+
+   // action 3
+   addReply({ params, body }, res) {
+      Comment.findOneAndUpdate(
+        { _id: params.commentId },
+        { $push: { replies: body } },  // reply here
+        { new: true }
+      )
+      .then(dbPizzaData => {
+         if (!dbPizzaData) {
+         res.status(404).json({ message: 'No pizza found with this id!' });
+         return;
+         }
+         res.json(dbPizzaData);
+      })
+      .catch(err => res.json(err));
+   },
+  
+   // action 4
+   // MongoDB $pull operator to remove the specific reply from the replies array 
+   // where the replyId matches the value of params.replyId passed in from the route
+   removeReply({ params }, res) {
+      return Comment.findOneAndUpdate(
+      { _id: params.commentId },
+      { $pull: { replies: { replyId: params.replyId } } },  
+      { new: true }
+      )
+      .then(dbPizzaData => res.json(dbPizzaData))
+      .catch(err => res.json(err));
+   }
+
+   // removeReply({ params}, res){
+   //    Comment.findOneAndDelete({_id: params.replyId})
+   //    .then(deletedReply => {
+   //       if(!deletedReply){
+   //          return res.status(404).json({message: "No Reply with this Id"});
+   //       }
+   //       return Comment.findByIdAndUpdate(
+   //         {_id: params.commentId},
+   //         { $pull: { replies: { replyId: params.replyId } } },  
+   //         { new: true} 
+   //       );
+   //    })
+   //    .then(dbCommentData => {
+   //       if(!dbCommentData){
+   //          res.status(404).json({ message: "No comment found with this id!"});
+   //          return;
+   //       }
+   //       res.json(dbCommentData);
+   //    })
+   //    .catch(err => res.json(err));
+   // }, // end of removeReply
 
 }; // end of controller
+
 
 module.exports = commentController;

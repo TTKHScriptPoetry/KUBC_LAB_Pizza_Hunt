@@ -20,7 +20,7 @@ const PizzaSchema = new Schema({
   toppings: [],
   comments: [
       { 
-        type: Schema.Types.ObjectId, // type to be an ObjectId >> so that Mongoose knows to expect a comment?
+        type: Schema.Types.ObjectId, // IMPORTANT type to be an ObjectId >> so that Mongoose knows to expect a comment?
         ref: 'Comment' // Tells the Pizza model which documents to search to find the right comments.
       }
     ] // The type of String is just a placeholder. We'll need to update it to refer to the Comment type that we've created.
@@ -28,7 +28,7 @@ const PizzaSchema = new Schema({
   {
     // -- Tell the schema that it can use virtuals
     toJSON: { 
-      virtuals: true,
+      virtuals: true, // reason, compute comment count 'virtually' see line 40 for more work
       getters: true
     },
     id: false // False because it is a virtual that Mongoose returns, and we don’t need it.
@@ -45,7 +45,7 @@ PizzaSchema.virtual('commentCount').get(function() {
 // const pizza = await Pizza.findOne()
 // pizza.commentCount // 5
 
- // create the Pizza model using the PizzaSchema
+// create the Pizza model using the PizzaSchema
 const Pizza = model('Pizza', PizzaSchema);
 
 // export the Pizza model
