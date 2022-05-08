@@ -61,41 +61,47 @@ const commentController = {
       })
       .catch(err => res.json(err));
    },
-  
-   // action 4
-   // MongoDB $pull operator to remove the specific reply from the replies array 
-   // where the replyId matches the value of params.replyId passed in from the route
-   removeReply({ params }, res) {
-      return Comment.findOneAndUpdate(
-      { _id: params.commentId },
-      { $pull: { replies: { replyId: params.replyId } } },  
-      { new: true }
-      )
-      .then(dbPizzaData => res.json(dbPizzaData))
-      .catch(err => res.json(err));
-   }
 
-   // removeReply({ params}, res){
-   //    Comment.findOneAndDelete({_id: params.replyId})
-   //    .then(deletedReply => {
-   //       if(!deletedReply){
-   //          return res.status(404).json({message: "No Reply with this Id"});
-   //       }
-   //       return Comment.findByIdAndUpdate(
-   //         {_id: params.commentId},
-   //         { $pull: { replies: { replyId: params.replyId } } },  
-   //         { new: true} 
-   //       );
-   //    })
-   //    .then(dbCommentData => {
-   //       if(!dbCommentData){
-   //          res.status(404).json({ message: "No comment found with this id!"});
-   //          return;
-   //       }
-   //       res.json(dbCommentData);
-   //    })
+   // // add reaction to thought
+   // // addReaction({ params, body }, res) {
+   // //    Thought.findOneAndUpdate(
+   // //    { _id: params.thoughtId }, //
+   // //    { $push: { reactions: body } }, 
+   // //    { new: true }
+   // //    )
+   // //    .then(dbUserData => {
+   // //       if (!dbUserData) {
+   // //          res.status(404).json({ message: 'No thought found with this id to add reactions!' });
+   // //          return;
+   // //       }
+   // //       res.json(dbUserData);
+   // //    })
+   // //    .catch(err => res.json(err));
+   // // },
+  
+   // // action 4
+   // // MongoDB $pull operator to remove the specific reply from the replies array 
+   // // where the replyId matches the value of params.replyId passed in from the route
+   // removeReply({ params }, res) {
+   //    return Comment.findOneAndUpdate(
+   //    { _id: params.commentId },
+   //    { $pull: { replies: { replyId: params.replyId } } },  
+   //    { new: true }
+   //    )
+   //    .then(dbPizzaData => res.json(dbPizzaData))
    //    .catch(err => res.json(err));
-   // }, // end of removeReply
+   // }
+
+   removeReply({ params}, res){      
+      return Comment.findByIdAndUpdate(
+         {_id: params.commentId},
+         { $pull: { replies: { replyId: params.replyId } } },  
+         { new: true} 
+      )      
+      .then(dbCommentData => res.json(dbCommentData)
+      )
+      .catch(err => res.json(err));
+   }, // end of removeReply
 
 }; // end of controller
 

@@ -102,6 +102,7 @@ const handlePizzaSubmit = event => {
     })
     .catch(err => {
       console.log(err);
+      saveRecordAtStorage(formData);
     });
 
 }; // End of handlePizzaSubmit
