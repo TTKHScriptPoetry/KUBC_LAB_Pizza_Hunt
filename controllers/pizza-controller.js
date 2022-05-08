@@ -52,7 +52,7 @@ const pizzaController = {
    // make a request to PUT /api/pizzas/:id.
    // update pizza by id
    updatePizza({ params, body }, res) {
-      Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true }) //we're instructing Mongoose to return the new version of the document.
+      Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true }) //we're instructing Mongoose to return the new version of the document.
       .then(dbPizzaData => {
          if (!dbPizzaData) {
             res.status(404).json({ message: 'No pizza found with this id!' });

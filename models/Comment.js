@@ -10,10 +10,14 @@ const ReplySchema = new Schema(
        default: () => new Types.ObjectId() // reason to import Type
      },
      replyBody: {
-       type: String
+       type: String,
+       required: 'It appears you have not provided a reply, it cannot be empty!', 
+       trim: true
      },
      writtenBy: {
-       type: String
+       type: String, 
+       require: true,
+       trim: true
      },
      createdAt: {
        type: Date,
@@ -31,9 +35,13 @@ const ReplySchema = new Schema(
 const CommentSchema = new Schema(
    {  
       commentBody: {
+         required: 'Comment cannot be empty!',
+         trim: true,
          type: String
       },
       writtenBy: {
+         required: true,
+         trim: true,
          type: String
          },
       createdAt: {
